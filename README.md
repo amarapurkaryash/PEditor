@@ -21,4 +21,4 @@
  3.Pdfminer------https://pypi.org/project/pdfminer/
 
 
-Still its in development thats why web version is not available.Hope you enjoy this..
+Still its in development thats why web version is in progress.Hope you enjoy this..
