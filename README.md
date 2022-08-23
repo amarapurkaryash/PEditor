@@ -1,7 +1,7 @@
 # PEditor
  A mini __PDF_Editor__
  
- Demo video link:https://drive.google.com/file/d/1W8FUIKWcRc_pScldrOmwO6rlALP63wgC/view?usp=sharing
+ Demo video link:
  
  How to run
  1.Run PEditor.py in terminal.
