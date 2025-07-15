@@ -2,3 +2,4 @@ streamlit==1.8.0
 pdfminer==20191125
 protobuf==3.20.*
 altair==4.2.2
+click==8.1.7
