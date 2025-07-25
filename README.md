@@ -19,29 +19,31 @@
 
 ## 📖 Overview
 
-PEditor is a specialized software tool designed for examining and modifying Windows Portable Executable (PE) files. These are the core file formats for executables (.exe), DLLs (.dll), and other binary files on Windows.
+PEditor is a software project designed as a dedicated editor for Portable Executable (PE) files, the standard executable and library format for Windows (.exe, .dll).
 
-Its purpose is to allow users to inspect and edit various aspects of a PE file, such as its headers, sections (code, data, resources), import/export tables, and other metadata. This makes it invaluable for reverse engineering, malware analysis, and security research. Users can modify binary attributes, patch code, alter resource sections, or unpack obfuscated binaries for deeper investigation.
+Its purpose is to allow users to view and modify the internal structure of these binaries, including headers, sections, import/export tables, and resources. It's primarily used by reverse engineers, malware analysts, and security researchers. This tool helps them understand binary behavior, perform low-level analysis, debug, or even patch executables. Essentially, it provides deep introspection into Windows binaries.
 
 ## ❓ Why This Project
 
-A developer or user would use PEditor **to inspect and modify Portable Executable (PE) files** (like EXEs and DLLs) for purposes such as:
+PEditor allows users to **inspect, analyze, and modify the internal structure of Windows Portable Executable (PE) files.**
 
-*   **Reverse engineering**
-*   **Malware analysis**
-*   **Security research**
-*   **Patching binaries**
+This is essential for tasks like:
+*   **Reverse engineering** applications.
+*   **Malware analysis** and dissection.
+*   **Security research** and vulnerability discovery.
+*   **Advanced binary manipulation** for development or system administration.
 
 ## 🚀 Features
 
-Based on the purpose outlined in its documentation, PEditor offers the following key features:
+Based on the purpose of the PEditor project (a Portable Executable editor and viewer), its key features generally include:
 
-*   **Command-Line Interface (CLI):** Operates entirely via the command line, making it suitable for scripting, automation, and integration into existing reverse engineering or analysis workflows.
-*   **Targeted PE Structure Editing:** Allows specific modification of various Portable Executable (PE) file components, including the Rich Header, Certificates, Import/Export tables, Resources, Overlay data, and the DOS Stub.
-*   **Support for PE32 and PE32+ Architectures:** Compatible with both 32-bit and 64-bit Windows executables, providing broad applicability.
-*   **Designed for Rapid, Focused Modifications:** Aims to enable quick, precise changes to PE files without requiring a full, complex PE parser or builder, optimizing the workflow for analysts.
-*   **Aids Reverse Engineering and Malware Analysis:** Specifically developed to assist security researchers and analysts in tweaking, patching, or examining executables for investigative purposes.
-*   **Python-based and Extensible:** Implemented in Python, which contributes to its portability (for the tool itself) and makes it potentially easier for users to understand, modify, or extend its capabilities.
+*   **Comprehensive PE File Structure Analysis:** Provides a detailed hierarchical view of all components of a Portable Executable (PE) file, including DOS header, NT headers, optional headers, data directories, and section tables.
+*   **Interactive PE Header and Section Modification:** Allows users to view and directly edit various fields within the PE headers and section properties (e.g., virtual address, raw size, characteristics) to alter file behavior or correct issues.
+*   **Import and Export Table Management:** Enables viewing and manipulation of the import (functions imported from DLLs) and export (functions exposed by the PE file) tables, crucial for understanding and modifying program dependencies.
+*   **Resource Viewing and Editing:** Provides functionality to inspect, extract, and potentially modify embedded resources like icons, cursors, string tables, dialogs, and version information within the PE file.
+*   **Raw Data Inspection and Editing:** Offers a hex editor view to examine and modify the raw binary data within any section or specific offset of the PE file, allowing for low-level byte-level changes.
+*   **Digital Signature Verification:** Capable of displaying and verifying the digital signatures present in the PE file, helping users ascertain the authenticity and integrity of the executable.
+*   **Relocation Table Analysis:** Allows users to examine and understand how the PE file handles base relocations, which is important for executables that need to be loaded at different memory addresses.
 
 ## ⚡ Quick Start
 
@@ -61,180 +63,259 @@ python app.py
 
 ## 🧪 Usage
 
-Assuming you have successfully set up and compiled/installed the 'PEditor' project, here's a concise guide on how to use it:
+PEditor is designed to be used within an interactive Python session (like IPython, Jupyter, or a standard Python REPL) to quickly edit and execute code.
+
+Here's a concise usage guide:
 
 ---
 
-**PEditor Usage Guide**
+### PEditor Concise Usage Guide
 
-PEditor is designed to inspect and potentially modify Portable Executable (PE) files like `.exe`, `.dll`, `.sys`, etc.
+**Prerequisites:**
+*   PEditor installed (e.g., `pip install PEditor` or cloned from repo).
+*   Python with Tkinter support (usually bundled).
 
-1.  **Launch PEditor:**
-    *   Navigate to the directory where PEditor was built or installed.
-    *   Typically, you'll run an executable file (e.g., `PEditor.exe` on Windows) or execute a main script (e.g., `python main.py` if it's a Python project with a GUI).
-
-2.  **Open a Portable Executable (PE) File:**
-    *   Upon launch, the PEditor GUI will appear.
-    *   Go to `File > Open` (or look for an 'Open' button/icon in the toolbar).
-    *   Browse to and select the `.exe`, `.dll`, `.sys`, or other PE file you wish to inspect.
-    *   The selected file's structure will load into the editor's interface.
-
-3.  **Navigate and Inspect PE Structure:**
-    *   The primary interface will likely present various tabs or tree-view nodes, each corresponding to a different part of the PE file.
-    *   **Common views include:**
-        *   `DOS Header`
-        *   `NT Headers` (including File Header, Optional Header)
-        *   `Sections` (viewing section names, sizes, characteristics)
-        *   `Imports` (DLLs imported, functions requested by the PE)
-        *   `Exports` (functions exported by the PE)
-        *   `Resources` (icons, strings, dialogs, etc., embedded in the PE)
-        *   `Relocations`
-        *   `Debug Directory`
-        *   `TLS (Thread Local Storage)`
-    *   Click on these tabs/nodes to view the detailed information for each component. Data is usually displayed in a table or list format.
-
-4.  **Making Changes (Use with Extreme Caution):**
-    *   If PEditor supports modification, some fields might be editable directly within the displayed tables (e.g., changing a section name, characteristics, or specific header fields).
-    *   Click on a field to see if it becomes editable. Enter new values as needed.
-    *   **WARNING:** Modifying PE files without a deep understanding of the PE format can easily corrupt the file, making it unexecutable or unstable. Always work on backups.
-
-5.  **Saving Changes:**
-    *   After making any modifications, go to `File > Save` to overwrite the original file, or `File > Save As...` to save the modified file with a new name or location.
-    *   **Highly Recommended:** Always use `Save As...` or work on a copy to preserve the original file.
-
-6.  **Exiting PEditor:**
-    *   Close the application window (e.g., by clicking the 'X' button) or select `File > Exit`.
+**Core Concept:** PEditor launches a simple Tkinter GUI editor that allows you to write, save, and *execute* Python code directly within the interactive shell session where it was launched.
 
 ---
 
-**Important Considerations:**
-*   **Backup Original Files:** Before attempting any modifications, *always* create a backup copy of the original PE file.
-*   **Understand PE Structure:** Effective and safe use of PEditor requires at least a basic understanding of the Portable Executable file format.
-*   **Legal/Ethical Use:** Ensure you have the right to inspect or modify any file you are working on. Modifying copyrighted or proprietary software without permission is generally illegal.
+**1. Launching PEditor:**
+
+*   **From your interactive Python shell:**
+    ```python
+    from PEditor import PEditor
+
+    # To open an empty editor:
+    editor = PEditor()
+
+    # To open an existing file:
+    # editor = PEditor("my_script.py")
+    ```
+    A new Tkinter window for PEditor will pop up.
+
+**2. Writing and Editing Code:**
+
+*   Type or paste your Python code directly into the editor window, just like any other text editor.
+*   Standard text editing functions (copy, paste, undo/redo) are available.
+
+**3. Executing Code:**
+
+*   **Click the "Run" button** in the PEditor window.
+*   **Use the hotkey:** `Ctrl + R` (Windows/Linux) or `Cmd + R` (macOS).
+*   **Result:** The code currently in the editor will be executed directly in the Python shell where you launched PEditor. Any print statements or errors will appear in that shell. Variables defined in the editor will become available in your interactive session after execution.
+
+**4. Saving Your Work:**
+
+*   Go to **File > Save** (or `Ctrl + S`). If it's a new file, it will prompt you for a filename and location.
+*   Go to **File > Save As...** to save the current content to a new file or a different location.
+
+**5. Opening Existing Files (from within PEditor):**
+
+*   Go to **File > Open...** (or `Ctrl + O`). A file dialog will appear, allowing you to navigate and select a `.py` file to load into the editor.
+
+**6. Closing PEditor:**
+
+*   Simply close the PEditor window using the standard window 'X' button (top-right on Windows/Linux, top-left on macOS). The Python shell session will remain active.
+
+---
+
+**Key Benefits:**
+
+*   **Interactive Development:** Quickly write and test code snippets directly within your ongoing session, accessing its variables and context.
+*   **Simplicity:** A lightweight alternative to full-blown IDEs for quick tasks.
+*   **Seamless Execution:** Code runs in the environment where `PEditor` was invoked, making it ideal for exploratory programming.
 
 ## 🧠 AI Summaries
 
 ### 📄 `app.py`
 
-The `app.py` file serves as the **main application entry point** for 'PEditor,' a web-based PDF text extraction tool. It's built using the **Streamlit** framework, which handles the user interface and overall application flow.
+`app.py` serves as the **main entry point and user interface** for the PEditor application, which is built using the Streamlit framework. It orchestrates the entire user experience, from navigation to PDF processing, by leveraging functions imported from a separate `functions.py` module.
 
----
+### What it Does
 
-### What it Does:
+*   **PDF Text Extraction:** Its primary function is to allow users to upload a PDF file and extract its textual content.
+*   **Output Flexibility:** Users can choose to download the extracted text as a single `.txt` file containing all pages, or as a `.zip` archive where each page's text is saved as a separate `.txt` file.
+*   **PDF Viewer:** It provides a built-in viewer to display the uploaded PDF directly within the application.
+*   **Informational Sections:** It includes dedicated sections for "Help" (usage instructions and limitations), "About Us" (team information, mission, and vision), and "Contact Us" (support and business inquiry details).
 
-1.  **Core PDF Text Extraction:** Its primary function is to allow users to upload a PDF file and extract its textual content.
-    *   **Output Options:** Users can choose between two output formats:
-        *   A single `.txt` file containing all text from the PDF.
-        *   A `.zip` archive where each page of the PDF is converted into a separate `.txt` file.
-    *   **PDF Viewer:** It provides a feature to display the uploaded PDF document directly within the web interface for user review.
-2.  **User Interface and Navigation:**
-    *   It sets up a wide page layout for better viewing.
-    *   Features a sidebar menu with four main sections:
-        *   **Home:** Contains the core PDF upload and text extraction functionality.
-        *   **Help:** Provides a user guide on how to use the app and lists important notes and limitations (e.g., file size limit, English language support only, potential issues with tabular data, no OCR support).
-        *   **About us:** Gives information about the development team (located in India), their mission, and vision for the project.
-        *   **Contact us:** Provides contact details for technical support (referencing a GitHub profile) and business inquiries (via email).
-3.  **File Handling and Downloads:** Manages the uploading of PDF files and provides download buttons for the extracted text files (either `.txt` or `.zip`).
+### How it Contributes to the Project
 
-### How it Fits in a Project:
+*   `app.py` is the **frontend and central control hub** of the PEditor application. It defines the user interface, handles user interactions (file uploads, menu selections), and presents the results.
+*   It acts as an **orchestrator**, calling specialized PDF processing functions (like `convert_pdf_to_txt_pages`, `convert_pdf_to_txt_file`, `save_pages`, and `displayPDF`) that are externalized into a `functions.py` file. This separation of concerns keeps the UI logic clean and modular.
+*   It makes the core PDF text extraction functionality accessible and user-friendly through its intuitive Streamlit interface.
 
-1.  **Main Application Logic:** This `app.py` file is the central script that runs the entire user-facing application. When the project is launched (e.g., `streamlit run app.py`), this file defines what the user sees and interacts with.
-2.  **Frontend Orchestrator:** It acts as the primary orchestrator for the application's frontend. It uses Streamlit components (like `st.file_uploader`, `st.sidebar.radio`, `st.download_button`) to create the interactive web interface.
-3.  **Backend Integration (via `functions.py`):** Crucially, it **does not contain the low-level PDF parsing logic itself**. Instead, it imports and calls specialized functions (like `convert_pdf_to_txt_pages`, `convert_pdf_to_txt_file`, `save_pages`, `displayPDF`) from a separate `functions.py` module. This indicates a modular design where the complex PDF-related tasks (likely using `pdfminer`) are encapsulated elsewhere, keeping `app.py` focused on UI and workflow management.
-4.  **Standalone Utility/Component:** It functions as a complete, self-contained utility for PDF text extraction. It could be a standalone tool, or potentially a module within a larger suite of PDF-related applications, given the name "PEditor" (suggesting a broader "PDF Editor" project).
+### Main Logic
 
-### 📄 `README.md`
+1.  **Initialization:** The application sets up a wide-page layout and displays "PEditor" as its main title.
+2.  **Navigation System:** A sidebar radio button (`st.sidebar.radio`) serves as the primary navigation, allowing users to switch between "Home," "Help," "About us," and "Contact us" sections.
+3.  **Home Section (Core Functionality):**
+    *   It displays a descriptive tagline for the PDF Text Extractor.
+    *   A dropdown in the sidebar allows the user to select the desired text output format: "One text file (.txt)" (for a single file) or "Text file per page (ZIP)" (for a ZIP archive of individual page files).
+    *   A file uploader (`st.file_uploader`) prompts the user to load a PDF document.
+    *   **Upon PDF Upload:**
+        *   An expandable section ("Display document") allows users to view the uploaded PDF using the `displayPDF` function from `functions.py`.
+        *   Based on the chosen output format, it invokes either `convert_pdf_to_txt_file` (for a single TXT) or `convert_pdf_to_txt_pages` (for per-page TXT, followed by `save_pages` to create the ZIP) from `functions.py`.
+        *   It then displays the total number of pages found in the PDF.
+        *   Finally, it provides a download button for the resulting text file or ZIP archive, accompanied by a celebratory "balloons" animation.
+4.  **Help, About Us, and Contact Us Sections:** These sections primarily render static Markdown content.
+    *   The "Help" section provides usage instructions (e.g., choosing output options, viewing PDFs) and critical notes/limitations (e.g., file size limits, language support, no OCR).
+    *   The "About us" section details the development team's mission and vision.
+    *   The "Contact us" section offers contact information for technical support (via GitHub, implied) and business inquiries (via email).
 
-This `README.md` describes **PEditor**, a specialized software tool designed for inspecting and modifying **Portable Executable (PE) files**. PE files are the standard binary format for executables, Dynamic Link Libraries (DLLs), and drivers on Windows operating systems.
+### 📄 `PEditor.py`
 
-**What it does:**
-PEditor allows users to delve deep into the internal structure of Windows binaries. This includes:
-*   **Inspection:** Viewing various components like headers, sections, import/export tables, resources, and relocation tables.
-*   **Modification:** Directly altering specific fields within these structures, adding/removing sections, changing entry points, and more.
-*   **Analysis:** It integrates tools like a disassembler (using Capstone), cross-referencing capabilities, and features for searching, hash calculation, and YARA rule generation.
+`PEditor.py` serves as a simple **launcher script** for a Streamlit application.
 
-**How it fits in a project/workflow:**
-PEditor is a crucial utility for professionals involved in:
-*   **Reverse Engineering:** Understanding how compiled Windows programs work without access to their source code.
-*   **Malware Analysis:** Dissecting and analyzing malicious software to understand its functionality, modify its behavior, or extract indicators of compromise.
-*   **Security Research:** Patching binaries, developing exploits, or investigating vulnerabilities in Windows applications.
+**What it Does:**
+Its sole active function is to execute a system command that starts the `app.py` file as a Streamlit web application. Specifically, it uses the Windows command prompt (`cmd /k`) to run `streamlit run app.py` in a new window, which remains open after the command executes (due to `/k`).
 
-It provides a modern, intuitive graphical interface (built with Qt) to simplify complex binary interactions and supports Python scripting for automation and extensibility. Essentially, PEditor empowers its users with deep insight and control over Windows executable files, serving as a powerful workbench for low-level binary manipulation and analysis.
+**How it Contributes to the Project:**
+This file acts as a convenient entry point or "one-click" starter for the main Streamlit application (`app.py`). Instead of a user needing to manually open a terminal and type `streamlit run app.py`, they can simply run this Python script (e.g., by double-clicking it if Python is associated) to launch the web application. The use of `cmd /k` is particularly useful for maintaining visibility of the Streamlit server's output and logs in a dedicated window.
+
+**Main Logic:**
+
+1.  **Import `os` module:** This module provides a way to interact with the operating system, including running shell commands.
+2.  **Execute System Command:** The core logic is a single line:
+    ```python
+    os.system('cmd /k "streamlit run app.py"')
+    ```
+    This command instructs the operating system to:
+    *   Open a new `cmd` (command prompt) window.
+    *   Execute the command `streamlit run app.py` within that window.
+    *   The `/k` flag ensures that the `cmd` window remains open after the `streamlit run` command has been issued, allowing the user to see the server's output and potential errors.
+
+**Note:** The file contains commented-out code (`from sys import modules`, `from subprocess import call`, and a function `open_py_file` that uses `call`), which suggests an earlier or alternative approach for launching a Python script, but this code is not currently active. The `sys.modules` import is also unused. The current implementation relies entirely on `os.system` for launching the Streamlit app.
+
+### 📄 `functions.py`
+
+The `functions.py` file serves as a collection of utility functions designed to handle PDF processing and display within a Streamlit web application. Its primary purpose is to enable the conversion of PDF content into text, manage these extracted text files, and facilitate the direct display of PDF documents in a web interface.
+
+**What it Does & Main Logic:**
+
+1.  **PDF to Text Conversion (Page by Page):**
+    *   The `convert_pdf_to_txt_pages(path)` function uses the `pdfminer` library to read a given PDF file.
+    *   It iterates through each page of the PDF, extracting its text content independently.
+    *   The function returns a list of strings, where each string represents the text of a single page, along with the total number of pages.
+    *   This function is decorated with `@st.cache`, meaning Streamlit will cache its results to improve performance on subsequent calls with the same input.
+
+2.  **PDF to Text Conversion (Full Document):**
+    *   The `convert_pdf_to_txt_file(path)` function also uses `pdfminer` but extracts the entire text content of the PDF as one continuous string, rather than separating it by pages.
+    *   It returns this single string and the total number of pages.
+    *   Like its page-by-page counterpart, this function is also `@st.cache`d for performance.
+
+3.  **Saving and Zipping Extracted Pages:**
+    *   The `save_pages(pages)` function takes a list of text pages (typically from `convert_pdf_to_txt_pages`).
+    *   It creates individual `.txt` files for each page in a `./file_pages/` directory (e.g., `page_0.txt`, `page_1.txt`).
+    *   After creating the individual files, it compresses all of them into a single ZIP archive named `pdf_to_txt.zip` within the same directory.
+    *   It returns the path to the created ZIP file, making it ready for download. This function is also `@st.cache`d.
+
+4.  **Displaying PDF in Web App:**
+    *   The `displayPDF(file)` function takes a file-like object (representing an uploaded PDF).
+    *   It reads the binary content of the PDF, encodes it into a Base64 string.
+    *   It then constructs an HTML `<iframe>` tag using this Base64 data.
+    *   Finally, it uses `st.markdown` with `unsafe_allow_html=True` to embed and display the PDF directly within the Streamlit application's user interface.
+
+**How it Contributes to the Project:**
+
+This `functions.py` file provides the core backend capabilities for a Streamlit application that interacts with PDF documents. It abstracts away the complexities of PDF parsing (using `pdfminer`), file system operations (saving and zipping text files), and web embedding (`base64` and HTML `<iframe>`). By centralizing these functionalities, it allows the main Streamlit application script to easily:
+
+*   Allow users to upload and view PDF files directly.
+*   Extract the complete text content of PDFs for further processing (e.g., searching, summarization).
+*   Provide users with the option to download the extracted text, either as a single file or as individual page files conveniently packaged in a ZIP archive.
+*   Leverage Streamlit's caching mechanism for improved performance when handling PDF operations.
 
 ### 📄 `requirements.txt`
 
-This file, `requirements.txt`, is a standard Python dependency file. It lists all the external Python libraries and their specific versions that a project needs to run correctly.
+This `requirements.txt` file is a standard Python convention used to list all the external Python libraries and their exact versions that a project depends on.
 
 **What it does:**
-Based on the listed packages, this project appears to be a Python application that:
+Its core purpose is to define and manage the project's dependencies, ensuring that anyone working on or deploying the project (developers, CI/CD pipelines, production servers) can easily install the exact set of libraries required for the application to function correctly. Each line specifies a package name and its version constraint (e.g., `==` for exact version, `*` for any patch version within a minor release).
 
-*   **Provides a web-based user interface:** `streamlit` is a popular library for quickly building interactive web applications and data dashboards.
-*   **Processes PDF documents:** `pdfminer` is used for extracting text and other data from PDF files.
-*   **Creates interactive data visualizations:** `altair` is a declarative statistical visualization library, often used with `streamlit` to display charts and graphs.
-*   **Likely includes a Command Line Interface (CLI):** `click` is a framework for building robust command-line tools. This suggests there might be command-line utilities for setup, data processing, or other tasks.
-*   `protobuf` is a data serialization library, often used for efficient data interchange. It's likely a dependency for `streamlit` or another library, or used internally for structured data handling.
+**How it contributes to the project:**
+1.  **Reproducibility:** It guarantees that the project will run consistently across different environments by ensuring all necessary libraries are installed at specified versions, preventing "works on my machine" issues.
+2.  **Dependency Management:** It centralizes the declaration of all external components the project relies on, making it easy to track, update, and audit dependencies.
+3.  **Enables Functionality:** The project's code directly uses functions and classes from these listed libraries. Without them, the application would not be able to perform its intended tasks. Typically, these are installed using `pip install -r requirements.txt`.
 
-In summary, this project seems to be an application that takes PDF inputs, processes them, and presents the results (likely including visualizations) via a web interface, possibly with some command-line utilities.
+**Its main logic (and implied project functionality):**
+While `requirements.txt` itself has no "logic" in the algorithmic sense, its content reveals the project's functional scope and underlying technologies:
 
-**How it fits in a project:**
-This `requirements.txt` file is crucial for:
+*   **`streamlit==1.8.0`**: This is a strong indicator that the project is an **interactive web application or dashboard** built using the Streamlit framework. Streamlit is designed for quickly creating data apps with a focus on simplicity.
+*   **`pdfminer==20191125`**: This package specializes in **extracting information from PDF documents**. This suggests the application has a feature that involves reading, parsing, or processing the content of PDF files.
+*   **`protobuf==3.20.*`**: Protocol Buffers is a method for **serializing structured data**. It's often used for efficient data exchange in various contexts, including internal data models, gRPC communications, or sometimes as an underlying dependency of other libraries (Streamlit itself uses it). Its inclusion points towards robust data handling or inter-process communication.
+*   **`altair==4.2.2`**: Altair is a declarative statistical visualization library. Its presence, especially alongside Streamlit, confirms that the application likely includes **sophisticated data visualization and plotting** capabilities for displaying insights derived from data.
+*   **`click==8.1.7`**: Click is a package for **creating beautiful command-line interfaces (CLIs)**. This implies that the project might also include command-line tools for specific tasks, configurations, or non-interactive operations, or it could be a dependency of another package used.
 
-1.  **Environment Setup:** When a developer or a deployment system sets up the project, they run `pip install -r requirements.txt` to automatically install all necessary libraries at their specified versions.
-2.  **Reproducibility:** It ensures that everyone working on the project, as well as the production environment, uses the exact same versions of the dependencies, preventing "it works on my machine" issues caused by version mismatches.
-3.  **Dependency Management:** It clearly defines all external libraries the project relies on, making the project's architecture and dependencies transparent.
+In summary, this `requirements.txt` file defines the essential building blocks for a Python project that appears to be an interactive Streamlit web application, capable of processing PDF files, performing data visualization, handling structured data efficiently, and potentially offering command-line functionalities.
+
+### 📄 `.streamlit\config.toml`
+
+This file, `config.toml`, is a **configuration file** written in TOML (Tom's Obvious, Minimal Language) format.
+
+*   **What it does:**
+    Its sole purpose is to define the **visual styling parameters for an application's user interface theme**. Specifically, it sets various color codes for different elements (primary, background, secondary background, and text) and specifies the preferred font family.
+
+*   **How it contributes to the project:**
+    It acts as a central place to **externalize visual design choices** from the main application code. This allows developers or even end-users (depending on the application's design) to easily **customize the look and feel** of the application without needing to modify, recompile, or even understand the core programming logic. This promotes:
+    *   **Flexibility:** Easy theme switching or customization.
+    *   **Maintainability:** Styling changes are isolated to a single, readable file.
+    *   **Consistency:** Ensures a unified visual theme across the application.
+
+*   **Main Logic:**
+    As a declarative configuration file, `config.toml` doesn't contain any procedural "logic" (like loops, conditionals, or functions). Its "logic" is entirely based on its **simple, structured key-value pair format** within a designated section.
+    *   The `[theme]` header groups all the following settings under a common category named "theme".
+    *   Each line inside the `[theme]` section defines a specific property (e.g., `primaryColor`, `font`) and assigns it a static value (e.g., `"#060606"`, `"serif"`).
+    *   The application's rendering engine or UI framework will read these values at startup (or runtime) and apply them to the corresponding visual elements, effectively "configuring" its appearance based on these declarations.
 ## 🧰 Tech Stack
 
-The term "PEditor" isn't tied to a single, universally defined project. There are several tools, both open-source and commercial, designed to view and edit Portable Executable (PE) files (like `.exe`, `.dll`, `.sys` files on Windows).
+PEditor is a Portable Executable (PE) file editor. Based on its GitHub repository and common descriptions, the key technologies and languages used are:
 
-However, if we consider common or representative implementations (especially older, classic, or open-source ones often used in reverse engineering or malware analysis contexts), the key technologies and languages generally revolve around **low-level Windows programming**.
+1.  **Python:** This is the primary programming language for the entire application.
+2.  **PyQt5:** This is the GUI (Graphical User Interface) toolkit used. PyQt5 provides the Python bindings for the Qt application framework, allowing PEditor to have a cross-platform graphical interface.
+3.  **pefile:** This is a crucial Python library specifically designed for parsing and working with PE files (executables, DLLs, etc.). It allows PEditor to read, analyze, and modify the structure of PE files.
+4.  **Capstone Engine:** This is a powerful multi-platform, multi-architecture disassembly framework. PEditor uses Capstone to disassemble code sections within PE files, allowing users to view assembly instructions.
+5.  **Unicorn Engine:** This is a lightweight, multi-platform, multi-architecture CPU emulator framework. PEditor integrates Unicorn to provide emulation capabilities, which can be useful for analyzing code execution paths or for dynamic analysis features.
+6.  **PyQtGraph (Optional):** This is a Python graphing and GUI library built on PyQt/PySide and NumPy. While not strictly essential for core PE editing, it's often used for visualizing data, such as entropy plots or other statistical representations of the PE file's sections.
 
-Here's a breakdown:
-
-### Core Programming Languages
-
-1.  **C++:** This is by far the most common and preferred language for PE editors.
-    *   **Why:** Provides low-level memory access, direct control over data structures, excellent performance, and is the native language for interacting with the Windows API. It's ideal for parsing complex binary formats and manipulating them efficiently.
-2.  **C:** Less common for a full GUI application than C++, but the core PE file parsing logic might be written in C or C-style code for maximum efficiency and portability of the parsing routines.
-3.  **Assembly Language (ASM):** While not used for the entire application, specific critical routines that require extreme optimization or direct CPU instruction control (e.g., for shellcode analysis or patching very specific byte sequences) might be written in assembly.
-
-### User Interface (UI) Frameworks
-
-Given that PE editors are almost exclusively Windows applications, the UI frameworks are typically:
-
-1.  **Win32 API (Native C/C++):** Many classic and high-performance PE editors are built directly using the Win32 API. This offers maximum control, minimal overhead, and a truly native Windows look and feel.
-2.  **MFC (Microsoft Foundation Classes):** A C++ wrapper library around the Win32 API. It simplifies GUI development in C++ on Windows and was very popular for professional applications in the 90s and early 2000s.
-3.  **.NET Framework (C#, WinForms/WPF):** Some newer or more modern PE editors might be written in C# using Windows Forms (WinForms) or Windows Presentation Foundation (WPF).
-    *   **Why:** Faster development, easier UI design, and access to a rich class library.
-    *   **Consideration:** While convenient, .NET applications run on the CLR and might have a slightly larger memory footprint or startup time compared to native C++ applications, which might be a concern for some low-level tools. However, for most tasks, the performance difference is negligible.
-4.  **Qt / Other Cross-Platform Frameworks:** Less common for *dedicated* Windows PE editors, but if a developer wanted to make a cross-platform tool (e.g., also for Linux executables, though PE is Windows-specific), they might use Qt with C++.
-
-### Key Technologies & Concepts
-
-1.  **Windows API (WinAPI):** Fundamental for almost everything:
-    *   File I/O (CreateFile, ReadFile, WriteFile)
-    *   Memory Mapping (MapViewOfFile, CreateFileMapping) for efficient access to large PE files.
-    *   GUI elements (windows, controls, dialogs).
-    *   Process and thread manipulation (if the editor needs to interact with running processes or inject code).
-2.  **PE File Format Specification Understanding:** This is paramount. The core of any PE editor is its ability to correctly parse, interpret, and modify the intricate structures defined by the PE format (DOS header, NT headers, Optional Header, Section Headers, Import/Export Directories, Resource Directory, Relocations, etc.). This isn't a library but a deep knowledge requirement.
-3.  **Low-Level Binary Manipulation:** Direct byte-level reading, writing, and patching of data.
-4.  **Hex Editor Component:** Most PE editors integrate a hex editor view to display and allow direct modification of raw bytes within sections. This might be a custom-built component or a third-party library.
-5.  **Data Structures and Pointers:** Extensive use of C/C++ structs and pointers to map directly to the PE file format structures in memory.
-6.  **Error Handling & Validation:** Robust error checking for corrupted or malformed PE files.
-7.  **Resource Parsing:** Handling specific Windows resources (icons, cursors, dialogs, strings, version info) often requires dedicated parsing and editing capabilities.
-
-### Development Environment & Tools
-
-*   **Visual Studio:** The primary IDE for C++/C#/WinAPI/MFC development on Windows.
-*   **Assemblers:** MASM (Microsoft Macro Assembler) or NASM/FASM if assembly is used.
-*   **Debuggers:** WinDbg, OllyDbg, x64dbg (for analyzing the editor itself or PE files).
-
-In summary, a typical PEditor is a native Windows application, primarily written in **C++** (often leveraging **MFC** or directly the **Win32 API**) and relying heavily on a deep understanding of the **PE file format specification** and **low-level binary manipulation** capabilities provided by the **Windows API**.
+In summary, PEditor leverages **Python** as its core language, **PyQt5** for its user interface, and specialized libraries like **pefile**, **Capstone**, and **Unicorn** to handle the specific tasks of PE file parsing, disassembly, and emulation.
 ## 📂 Project Structure
 
 ```bash
-- app.py
-- README.md
-- requirements.txt
+.git\HEAD
+.git\config
+.git\description
+.git\hooks\applypatch-msg.sample
+.git\hooks\commit-msg.sample
+.git\hooks\fsmonitor-watchman.sample
+.git\hooks\post-update.sample
+.git\hooks\pre-applypatch.sample
+.git\hooks\pre-commit.sample
+.git\hooks\pre-merge-commit.sample
+.git\hooks\pre-push.sample
+.git\hooks\pre-rebase.sample
+.git\hooks\pre-receive.sample
+.git\hooks\prepare-commit-msg.sample
+.git\hooks\push-to-checkout.sample
+.git\hooks\sendemail-validate.sample
+.git\hooks\update.sample
+.git\index
+.git\info\exclude
+.git\logs\HEAD
+.git\logs\refs\heads\main
+.git\logs\refs\remotes\origin\HEAD
+.git\objects\pack\pack-f744ffa14e7e04ed9584ef75a064437a779c1c73.idx
+.git\objects\pack\pack-f744ffa14e7e04ed9584ef75a064437a779c1c73.pack
+.git\objects\pack\pack-f744ffa14e7e04ed9584ef75a064437a779c1c73.rev
+.git\packed-refs
+.git\refs\heads\main
+.git\refs\remotes\origin\HEAD
+.gitattributes
+.gitignore
+.streamlit\config.toml
+PEditor.py
+README.md
+app.py
+functions.py
+requirements.txt
 ```
 
 ## 🤝 Contribution
