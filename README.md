@@ -10,7 +10,6 @@
 - [🚀 Features](#-features)
 - [⚡ Quick Start](#-quick-start)
 - [🧪 Usage](#-usage)
-- [🧠 AI Summaries](#-ai-summaries)
 - [🧰 Tech Stack](#-tech-stack)
 - [📂 Project Structure](#-project-structure)
 - [🤝 Contribution](#-contribution)
@@ -19,31 +18,79 @@
 
 ## 📖 Overview
 
-PEditor is a software project designed as a dedicated editor for Portable Executable (PE) files, the standard executable and library format for Windows (.exe, .dll).
+The project 'PEditor' is a web application built using **Streamlit** that primarily functions as a **PDF Text Extractor**. Despite its name, which might suggest PDF editing capabilities, its core functionality, as revealed by the provided code, is focused solely on **extracting text content from PDF documents**.
 
-Its purpose is to allow users to view and modify the internal structure of these binaries, including headers, sections, import/export tables, and resources. It's primarily used by reverse engineers, malware analysts, and security researchers. This tool helps them understand binary behavior, perform low-level analysis, debug, or even patch executables. Essentially, it provides deep introspection into Windows binaries.
+Here's a breakdown of what PEditor does:
+
+1.  **PDF Text Extraction:**
+    *   It allows users to upload a PDF file.
+    *   It offers two main modes for text extraction:
+        *   **One text file (.txt):** Extracts all text from the entire PDF document and consolidates it into a single `.txt` file for download.
+        *   **Text file per page (ZIP):** Extracts text from each page individually, creating a separate `.txt` file for each page. These individual text files are then bundled into a `.zip` archive for download.
+    *   It leverages the `pdfminer.six` library (indicated by imports like `pdfminer.pdfinterp`, `pdfminer.converter`, `pdfminer.pdfpage`) to parse the PDF structure and extract text.
+
+2.  **PDF Display:**
+    *   After a PDF is uploaded, users have the option to "Display document." This embeds the PDF directly within the web application interface, allowing the user to view the uploaded PDF in their browser.
+
+3.  **User Interface and Navigation:**
+    *   The application is built with Streamlit, providing a simple and interactive web-based interface.
+    *   It features a sidebar menu with navigation options:
+        *   **Home:** Contains the main PDF text extraction functionality.
+        *   **Help:** Provides instructions on how to use the app, including limitations (e.g., file size, language support, issues with tables/graphs, no OCR).
+        *   **About us:** Information about the developers and their mission/vision.
+        *   **Contact us:** Details for technical support and business inquiries.
+
+**Key Clarification regarding the Name "PEditor":**
+Based on the provided source code, the application *does not* offer any features for editing, modifying, merging, splitting, or otherwise manipulating the content or structure of PDF files beyond extracting their text. The "Display document" option might allow a user's *browser's native PDF viewer* to offer some basic interaction (like printing or saving locally), but this functionality is not provided by the PEditor application itself. The primary and only evident function is text extraction.
 
 ## ❓ Why This Project
 
-PEditor allows users to **inspect, analyze, and modify the internal structure of Windows Portable Executable (PE) files.**
+A developer would use the project 'PEditor' primarily as a **rapidly deployable, user-friendly, and efficient tool for extracting plain text from PDF documents**.
 
-This is essential for tasks like:
-*   **Reverse engineering** applications.
-*   **Malware analysis** and dissection.
-*   **Security research** and vulnerability discovery.
-*   **Advanced binary manipulation** for development or system administration.
+Here's a breakdown of why a developer would find this project useful, based on the provided code:
+
+1.  **Solves a Common Problem (PDF Text Extraction):** Many applications require extracting textual content from PDFs for further processing (e.g., data analysis, NLP, indexing, content management). PEditor provides a straightforward solution for this fundamental task.
+
+2.  **Rapid Development & Deployment (Streamlit):**
+    *   **Streamlit's Simplicity:** The project leverages Streamlit, which allows developers to build interactive web applications with pure Python quickly. This means a developer can get a functional UI for PDF text extraction up and running in a fraction of the time it would take with traditional web frameworks (like Flask/Django + HTML/CSS/JS).
+    *   **Minimal Frontend Code:** No need to write complex HTML, CSS, or JavaScript. Streamlit handles the UI rendering based on Python commands.
+
+3.  **Abstraction of PDF Parsing (pdfminer Integration):**
+    *   The `functions.py` file encapsulates the `pdfminer.six` library. A developer doesn't need to delve into the intricate details of `PDFResourceManager`, `PDFPageInterpreter`, `TextConverter`, etc., every time they need to extract text.
+    *   **Clean API:** `convert_pdf_to_txt_file` and `convert_pdf_to_txt_pages` provide simple function calls to get the desired text output.
+
+4.  **Flexible Output Formats:**
+    *   **Single `.txt` file:** Ideal for overall content analysis or when the entire document's text is needed as a contiguous block.
+    *   **`.zip` of individual page `.txt` files:** Crucial for tasks where page-level granularity is important (e.g., processing specific pages, maintaining original document structure, or analyzing content page by page).
+
+5.  **Performance Optimization (`@st.cache`):**
+    *   The use of `@st.cache` on the conversion functions is a significant advantage. It ensures that if the same PDF is uploaded again within a session, or if the function is called with identical parameters, the results are retrieved from a cache rather than re-processing the PDF, making the application faster and more responsive for the user.
+
+6.  **Ready-to-Use UI with User Guidance:**
+    *   Beyond just the core functionality, `app.py` includes a complete UI with menu options ("Home," "Help," "About us," "Contact us").
+    *   The "Help" section is particularly useful, providing clear instructions and important "Notes" (limitations, best practices). This makes the tool more user-friendly and reduces support queries for the developer.
+
+7.  **Foundation for Further Development:**
+    *   A developer might use PEditor as a starting point or a module within a larger system. For example:
+        *   **Data Pipeline:** Integrate PEditor to be the first step in a data pipeline that extracts text, then feeds it into an NLP model, a database, or a search index.
+        *   **Internal Tooling:** Provide a simple web interface for non-technical team members to extract text from documents they receive.
+        *   **Proof-of-Concept:** Quickly demonstrate PDF text extraction capabilities for a new project or idea.
+
+8.  **Open Source & Modifiable:** While the full license isn't provided, the full code implies it's intended to be shared and modified. A developer can customize it to fit specific needs, add new features (e.g., OCR integration, specific data parsing, output to other formats), or integrate it into other projects.
+
+In essence, PEditor offers a **quick, effective, and well-structured solution for a common PDF processing task**, making it an attractive choice for developers looking to build applications that involve extracting text from PDF documents without starting from scratch.
 
 ## 🚀 Features
 
-Based on the purpose of the PEditor project (a Portable Executable editor and viewer), its key features generally include:
+Based on the provided code, here are 7 features of this project:
 
-*   **Comprehensive PE File Structure Analysis:** Provides a detailed hierarchical view of all components of a Portable Executable (PE) file, including DOS header, NT headers, optional headers, data directories, and section tables.
-*   **Interactive PE Header and Section Modification:** Allows users to view and directly edit various fields within the PE headers and section properties (e.g., virtual address, raw size, characteristics) to alter file behavior or correct issues.
-*   **Import and Export Table Management:** Enables viewing and manipulation of the import (functions imported from DLLs) and export (functions exposed by the PE file) tables, crucial for understanding and modifying program dependencies.
-*   **Resource Viewing and Editing:** Provides functionality to inspect, extract, and potentially modify embedded resources like icons, cursors, string tables, dialogs, and version information within the PE file.
-*   **Raw Data Inspection and Editing:** Offers a hex editor view to examine and modify the raw binary data within any section or specific offset of the PE file, allowing for low-level byte-level changes.
-*   **Digital Signature Verification:** Capable of displaying and verifying the digital signatures present in the PE file, helping users ascertain the authenticity and integrity of the executable.
-*   **Relocation Table Analysis:** Allows users to examine and understand how the PE file handles base relocations, which is important for executables that need to be loaded at different memory addresses.
+1.  **PDF to Text Conversion:** The core functionality allows users to extract text content from uploaded PDF documents.
+2.  **Flexible Text Output Options:** Users can choose to download the extracted text as a single `.txt` file containing all content, or as a `.zip` archive where each page's text is saved as a separate `.txt` file.
+3.  **In-App PDF Display:** The application provides a feature to display the uploaded PDF document directly within the web interface, allowing users to view the file before or after extraction.
+4.  **Interactive Streamlit Web Interface:** Built using Streamlit, the project offers a user-friendly and interactive web application with a wide layout and responsive elements like file uploaders, select boxes, and download buttons.
+5.  **Multi-Section Navigation:** A clear sidebar menu (Home, Help, About us, Contact us) organizes the application's content, allowing users to easily navigate between different sections.
+6.  **Comprehensive User Guidance & Support:** The "Help" section provides detailed instructions on how to use the app and important notes regarding file size, language support, and content limitations. A "Contact Us" section offers technical support and business inquiry details.
+7.  **Direct File Upload and Download:** Users can easily upload their PDF files via a dedicated uploader and download the processed text directly through integrated download buttons.
 
 ## ⚡ Quick Start
 
@@ -57,265 +104,143 @@ cd your-repo
 # 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Run the application (example)
+# 4. Run the application
 python app.py
 ```
 
 ## 🧪 Usage
 
-PEditor is designed to be used within an interactive Python session (like IPython, Jupyter, or a standard Python REPL) to quickly edit and execute code.
+The PEditor project, as described by the provided `app.py` and `functions.py` code, is a Streamlit application designed for extracting text from PDF files.
 
-Here's a concise usage guide:
-
----
-
-### PEditor Concise Usage Guide
-
-**Prerequisites:**
-*   PEditor installed (e.g., `pip install PEditor` or cloned from repo).
-*   Python with Tkinter support (usually bundled).
-
-**Core Concept:** PEditor launches a simple Tkinter GUI editor that allows you to write, save, and *execute* Python code directly within the interactive shell session where it was launched.
+Here's how a user can utilize the project after successful setup (i.e., having Python, Streamlit, `pdfminer.six`, etc., installed, and running the application):
 
 ---
 
-**1. Launching PEditor:**
+### How to Use the PEditor Application
 
-*   **From your interactive Python shell:**
-    ```python
-    from PEditor import PEditor
+**Step 1: Launch the Application**
 
-    # To open an empty editor:
-    editor = PEditor()
-
-    # To open an existing file:
-    # editor = PEditor("my_script.py")
+1.  Open your terminal or command prompt.
+2.  Navigate to the directory where you have saved `app.py` and `functions.py` (and potentially created a `file_pages` directory if not automatically handled by `save_pages` function's execution).
+3.  Run the Streamlit application using the command:
+    ```bash
+    streamlit run app.py
     ```
-    A new Tkinter window for PEditor will pop up.
+4.  This command will open a new tab in your default web browser displaying the PEditor application.
 
-**2. Writing and Editing Code:**
+**Step 2: Navigate the Application (Sidebar Menu)**
 
-*   Type or paste your Python code directly into the editor window, just like any other text editor.
-*   Standard text editing functions (copy, paste, undo/redo) are available.
+Upon launching, you will see the PEditor title and a sidebar on the left with a "Menu" radio button. You can switch between different sections of the app:
 
-**3. Executing Code:**
+*   **Home:** This is the main functionality section for PDF text extraction.
+*   **Help:** Provides instructions on how to use the app and important notes/limitations.
+*   **About us:** Contains information about the development team's mission and vision.
+*   **Contact us:** Provides contact details for technical support and business inquiries.
 
-*   **Click the "Run" button** in the PEditor window.
-*   **Use the hotkey:** `Ctrl + R` (Windows/Linux) or `Cmd + R` (macOS).
-*   **Result:** The code currently in the editor will be executed directly in the Python shell where you launched PEditor. Any print statements or errors will appear in that shell. Variables defined in the editor will become available in your interactive session after execution.
+**Step 3: Extract Text from a PDF (Home Section)**
 
-**4. Saving Your Work:**
+1.  **Select "Home"** from the sidebar menu (it's the default view upon launch).
+2.  **Choose Output Format:** In the sidebar, under "PDF to Text", use the dropdown menu to select how you want the extracted text:
+    *   **`One text file (.txt)`:** This option will extract all text from all pages into a single `.txt` file.
+    *   **`Text file per page (ZIP)`:** This option will extract text from each page into a separate `.txt` file, then package all these individual `.txt` files into a single `.zip` archive.
+3.  **Upload Your PDF File:** In the main content area, click the **`Browse files`** button next to "Load your PDF file". Select the PDF document you wish to process from your computer. The app supports `.pdf` file types.
+4.  **Display Document (Optional):** After uploading, an expandable section titled **`Display document`** will appear. Click on it to view a preview of your uploaded PDF directly within the app.
+    *   *Note: The `displayPDF` function is declared in `app.py` but not defined in the provided `functions.py` or `app.py` code. Assuming it's a placeholder for a Streamlit PDF viewer, it would render the PDF for viewing purposes.*
+5.  **Download Extracted Text:**
+    *   If you selected **`One text file (.txt)`**: A **`Download txt file`** button will appear. Click it to download your PDF's text content as a single `.txt` file.
+    *   If you selected **`Text file per page (ZIP)`**: A **`Download ZIP (txt)`** button will appear. Click it to download a `.zip` file containing individual `.txt` files for each page of your PDF.
+6.  **Visual Feedback:** After successful download, `st.balloons()` will trigger a celebratory balloon animation.
 
-*   Go to **File > Save** (or `Ctrl + S`). If it's a new file, it will prompt you for a filename and location.
-*   Go to **File > Save As...** to save the current content to a new file or a different location.
+**Step 4: Access Help and Information (Help, About us, Contact us Sections)**
 
-**5. Opening Existing Files (from within PEditor):**
-
-*   Go to **File > Open...** (or `Ctrl + O`). A file dialog will appear, allowing you to navigate and select a `.py` file to load into the editor.
-
-**6. Closing PEditor:**
-
-*   Simply close the PEditor window using the standard window 'X' button (top-right on Windows/Linux, top-left on macOS). The Python shell session will remain active.
+*   **Help:**
+    1.  Select **"Help"** from the sidebar menu.
+    2.  Read the "How to use..." section for quick tips on extraction.
+    3.  Review the "Note:" section for important limitations, such as file size limits (200MB), the need to refresh for reusing the same file, English language support only, potential issues with tables/graphs, and no OCR support.
+*   **About us:**
+    1.  Select **"About us"** from the sidebar menu.
+    2.  Read about the development team's mission and vision for the project.
+*   **Contact us:**
+    1.  Select **"Contact us"** from the sidebar menu.
+    2.  Find information for "Technical Support" (directs to GitHub profile, though no specific link is in the provided code) and "Business Inquiry" (email: `yashamr192@gmail.com`). A clickable Gmail badge link is provided for convenience.
 
 ---
 
-**Key Benefits:**
+By following these steps, a user can effectively utilize the PEditor application for its intended purpose of extracting text from PDF documents and accessing related information.
 
-*   **Interactive Development:** Quickly write and test code snippets directly within your ongoing session, accessing its variables and context.
-*   **Simplicity:** A lightweight alternative to full-blown IDEs for quick tasks.
-*   **Seamless Execution:** Code runs in the environment where `PEditor` was invoked, making it ideal for exploratory programming.
-
-## 🧠 AI Summaries
-
-### 📄 `app.py`
-
-`app.py` serves as the **main entry point and user interface** for the PEditor application, which is built using the Streamlit framework. It orchestrates the entire user experience, from navigation to PDF processing, by leveraging functions imported from a separate `functions.py` module.
-
-### What it Does
-
-*   **PDF Text Extraction:** Its primary function is to allow users to upload a PDF file and extract its textual content.
-*   **Output Flexibility:** Users can choose to download the extracted text as a single `.txt` file containing all pages, or as a `.zip` archive where each page's text is saved as a separate `.txt` file.
-*   **PDF Viewer:** It provides a built-in viewer to display the uploaded PDF directly within the application.
-*   **Informational Sections:** It includes dedicated sections for "Help" (usage instructions and limitations), "About Us" (team information, mission, and vision), and "Contact Us" (support and business inquiry details).
-
-### How it Contributes to the Project
-
-*   `app.py` is the **frontend and central control hub** of the PEditor application. It defines the user interface, handles user interactions (file uploads, menu selections), and presents the results.
-*   It acts as an **orchestrator**, calling specialized PDF processing functions (like `convert_pdf_to_txt_pages`, `convert_pdf_to_txt_file`, `save_pages`, and `displayPDF`) that are externalized into a `functions.py` file. This separation of concerns keeps the UI logic clean and modular.
-*   It makes the core PDF text extraction functionality accessible and user-friendly through its intuitive Streamlit interface.
-
-### Main Logic
-
-1.  **Initialization:** The application sets up a wide-page layout and displays "PEditor" as its main title.
-2.  **Navigation System:** A sidebar radio button (`st.sidebar.radio`) serves as the primary navigation, allowing users to switch between "Home," "Help," "About us," and "Contact us" sections.
-3.  **Home Section (Core Functionality):**
-    *   It displays a descriptive tagline for the PDF Text Extractor.
-    *   A dropdown in the sidebar allows the user to select the desired text output format: "One text file (.txt)" (for a single file) or "Text file per page (ZIP)" (for a ZIP archive of individual page files).
-    *   A file uploader (`st.file_uploader`) prompts the user to load a PDF document.
-    *   **Upon PDF Upload:**
-        *   An expandable section ("Display document") allows users to view the uploaded PDF using the `displayPDF` function from `functions.py`.
-        *   Based on the chosen output format, it invokes either `convert_pdf_to_txt_file` (for a single TXT) or `convert_pdf_to_txt_pages` (for per-page TXT, followed by `save_pages` to create the ZIP) from `functions.py`.
-        *   It then displays the total number of pages found in the PDF.
-        *   Finally, it provides a download button for the resulting text file or ZIP archive, accompanied by a celebratory "balloons" animation.
-4.  **Help, About Us, and Contact Us Sections:** These sections primarily render static Markdown content.
-    *   The "Help" section provides usage instructions (e.g., choosing output options, viewing PDFs) and critical notes/limitations (e.g., file size limits, language support, no OCR).
-    *   The "About us" section details the development team's mission and vision.
-    *   The "Contact us" section offers contact information for technical support (via GitHub, implied) and business inquiries (via email).
-
-### 📄 `PEditor.py`
-
-`PEditor.py` serves as a simple **launcher script** for a Streamlit application.
-
-**What it Does:**
-Its sole active function is to execute a system command that starts the `app.py` file as a Streamlit web application. Specifically, it uses the Windows command prompt (`cmd /k`) to run `streamlit run app.py` in a new window, which remains open after the command executes (due to `/k`).
-
-**How it Contributes to the Project:**
-This file acts as a convenient entry point or "one-click" starter for the main Streamlit application (`app.py`). Instead of a user needing to manually open a terminal and type `streamlit run app.py`, they can simply run this Python script (e.g., by double-clicking it if Python is associated) to launch the web application. The use of `cmd /k` is particularly useful for maintaining visibility of the Streamlit server's output and logs in a dedicated window.
-
-**Main Logic:**
-
-1.  **Import `os` module:** This module provides a way to interact with the operating system, including running shell commands.
-2.  **Execute System Command:** The core logic is a single line:
-    ```python
-    os.system('cmd /k "streamlit run app.py"')
-    ```
-    This command instructs the operating system to:
-    *   Open a new `cmd` (command prompt) window.
-    *   Execute the command `streamlit run app.py` within that window.
-    *   The `/k` flag ensures that the `cmd` window remains open after the `streamlit run` command has been issued, allowing the user to see the server's output and potential errors.
-
-**Note:** The file contains commented-out code (`from sys import modules`, `from subprocess import call`, and a function `open_py_file` that uses `call`), which suggests an earlier or alternative approach for launching a Python script, but this code is not currently active. The `sys.modules` import is also unused. The current implementation relies entirely on `os.system` for launching the Streamlit app.
-
-### 📄 `functions.py`
-
-The `functions.py` file serves as a collection of utility functions designed to handle PDF processing and display within a Streamlit web application. Its primary purpose is to enable the conversion of PDF content into text, manage these extracted text files, and facilitate the direct display of PDF documents in a web interface.
-
-**What it Does & Main Logic:**
-
-1.  **PDF to Text Conversion (Page by Page):**
-    *   The `convert_pdf_to_txt_pages(path)` function uses the `pdfminer` library to read a given PDF file.
-    *   It iterates through each page of the PDF, extracting its text content independently.
-    *   The function returns a list of strings, where each string represents the text of a single page, along with the total number of pages.
-    *   This function is decorated with `@st.cache`, meaning Streamlit will cache its results to improve performance on subsequent calls with the same input.
-
-2.  **PDF to Text Conversion (Full Document):**
-    *   The `convert_pdf_to_txt_file(path)` function also uses `pdfminer` but extracts the entire text content of the PDF as one continuous string, rather than separating it by pages.
-    *   It returns this single string and the total number of pages.
-    *   Like its page-by-page counterpart, this function is also `@st.cache`d for performance.
-
-3.  **Saving and Zipping Extracted Pages:**
-    *   The `save_pages(pages)` function takes a list of text pages (typically from `convert_pdf_to_txt_pages`).
-    *   It creates individual `.txt` files for each page in a `./file_pages/` directory (e.g., `page_0.txt`, `page_1.txt`).
-    *   After creating the individual files, it compresses all of them into a single ZIP archive named `pdf_to_txt.zip` within the same directory.
-    *   It returns the path to the created ZIP file, making it ready for download. This function is also `@st.cache`d.
-
-4.  **Displaying PDF in Web App:**
-    *   The `displayPDF(file)` function takes a file-like object (representing an uploaded PDF).
-    *   It reads the binary content of the PDF, encodes it into a Base64 string.
-    *   It then constructs an HTML `<iframe>` tag using this Base64 data.
-    *   Finally, it uses `st.markdown` with `unsafe_allow_html=True` to embed and display the PDF directly within the Streamlit application's user interface.
-
-**How it Contributes to the Project:**
-
-This `functions.py` file provides the core backend capabilities for a Streamlit application that interacts with PDF documents. It abstracts away the complexities of PDF parsing (using `pdfminer`), file system operations (saving and zipping text files), and web embedding (`base64` and HTML `<iframe>`). By centralizing these functionalities, it allows the main Streamlit application script to easily:
-
-*   Allow users to upload and view PDF files directly.
-*   Extract the complete text content of PDFs for further processing (e.g., searching, summarization).
-*   Provide users with the option to download the extracted text, either as a single file or as individual page files conveniently packaged in a ZIP archive.
-*   Leverage Streamlit's caching mechanism for improved performance when handling PDF operations.
-
-### 📄 `requirements.txt`
-
-This `requirements.txt` file is a standard Python convention used to list all the external Python libraries and their exact versions that a project depends on.
-
-**What it does:**
-Its core purpose is to define and manage the project's dependencies, ensuring that anyone working on or deploying the project (developers, CI/CD pipelines, production servers) can easily install the exact set of libraries required for the application to function correctly. Each line specifies a package name and its version constraint (e.g., `==` for exact version, `*` for any patch version within a minor release).
-
-**How it contributes to the project:**
-1.  **Reproducibility:** It guarantees that the project will run consistently across different environments by ensuring all necessary libraries are installed at specified versions, preventing "works on my machine" issues.
-2.  **Dependency Management:** It centralizes the declaration of all external components the project relies on, making it easy to track, update, and audit dependencies.
-3.  **Enables Functionality:** The project's code directly uses functions and classes from these listed libraries. Without them, the application would not be able to perform its intended tasks. Typically, these are installed using `pip install -r requirements.txt`.
-
-**Its main logic (and implied project functionality):**
-While `requirements.txt` itself has no "logic" in the algorithmic sense, its content reveals the project's functional scope and underlying technologies:
-
-*   **`streamlit==1.8.0`**: This is a strong indicator that the project is an **interactive web application or dashboard** built using the Streamlit framework. Streamlit is designed for quickly creating data apps with a focus on simplicity.
-*   **`pdfminer==20191125`**: This package specializes in **extracting information from PDF documents**. This suggests the application has a feature that involves reading, parsing, or processing the content of PDF files.
-*   **`protobuf==3.20.*`**: Protocol Buffers is a method for **serializing structured data**. It's often used for efficient data exchange in various contexts, including internal data models, gRPC communications, or sometimes as an underlying dependency of other libraries (Streamlit itself uses it). Its inclusion points towards robust data handling or inter-process communication.
-*   **`altair==4.2.2`**: Altair is a declarative statistical visualization library. Its presence, especially alongside Streamlit, confirms that the application likely includes **sophisticated data visualization and plotting** capabilities for displaying insights derived from data.
-*   **`click==8.1.7`**: Click is a package for **creating beautiful command-line interfaces (CLIs)**. This implies that the project might also include command-line tools for specific tasks, configurations, or non-interactive operations, or it could be a dependency of another package used.
-
-In summary, this `requirements.txt` file defines the essential building blocks for a Python project that appears to be an interactive Streamlit web application, capable of processing PDF files, performing data visualization, handling structured data efficiently, and potentially offering command-line functionalities.
-
-### 📄 `.streamlit\config.toml`
-
-This file, `config.toml`, is a **configuration file** written in TOML (Tom's Obvious, Minimal Language) format.
-
-*   **What it does:**
-    Its sole purpose is to define the **visual styling parameters for an application's user interface theme**. Specifically, it sets various color codes for different elements (primary, background, secondary background, and text) and specifies the preferred font family.
-
-*   **How it contributes to the project:**
-    It acts as a central place to **externalize visual design choices** from the main application code. This allows developers or even end-users (depending on the application's design) to easily **customize the look and feel** of the application without needing to modify, recompile, or even understand the core programming logic. This promotes:
-    *   **Flexibility:** Easy theme switching or customization.
-    *   **Maintainability:** Styling changes are isolated to a single, readable file.
-    *   **Consistency:** Ensures a unified visual theme across the application.
-
-*   **Main Logic:**
-    As a declarative configuration file, `config.toml` doesn't contain any procedural "logic" (like loops, conditionals, or functions). Its "logic" is entirely based on its **simple, structured key-value pair format** within a designated section.
-    *   The `[theme]` header groups all the following settings under a common category named "theme".
-    *   Each line inside the `[theme]` section defines a specific property (e.g., `primaryColor`, `font`) and assigns it a static value (e.g., `"#060606"`, `"serif"`).
-    *   The application's rendering engine or UI framework will read these values at startup (or runtime) and apply them to the corresponding visual elements, effectively "configuring" its appearance based on these declarations.
 ## 🧰 Tech Stack
 
-PEditor is a Portable Executable (PE) file editor. Based on its GitHub repository and common descriptions, the key technologies and languages used are:
+Based on the provided codebase, here are the technologies and languages used:
 
-1.  **Python:** This is the primary programming language for the entire application.
-2.  **PyQt5:** This is the GUI (Graphical User Interface) toolkit used. PyQt5 provides the Python bindings for the Qt application framework, allowing PEditor to have a cross-platform graphical interface.
-3.  **pefile:** This is a crucial Python library specifically designed for parsing and working with PE files (executables, DLLs, etc.). It allows PEditor to read, analyze, and modify the structure of PE files.
-4.  **Capstone Engine:** This is a powerful multi-platform, multi-architecture disassembly framework. PEditor uses Capstone to disassemble code sections within PE files, allowing users to view assembly instructions.
-5.  **Unicorn Engine:** This is a lightweight, multi-platform, multi-architecture CPU emulator framework. PEditor integrates Unicorn to provide emulation capabilities, which can be useful for analyzing code execution paths or for dynamic analysis features.
-6.  **PyQtGraph (Optional):** This is a Python graphing and GUI library built on PyQt/PySide and NumPy. While not strictly essential for core PE editing, it's often used for visualizing data, such as entropy plots or other statistical representations of the PE file's sections.
+1.  **Programming Language:**
+    *   **Python:** The entire codebase is written in Python, evident from the syntax (`import`, `def`, `class`, `st.`, `with open`, etc.).
 
-In summary, PEditor leverages **Python** as its core language, **PyQt5** for its user interface, and specialized libraries like **pefile**, **Capstone**, and **Unicorn** to handle the specific tasks of PE file parsing, disassembly, and emulation.
+2.  **Key Libraries/Frameworks:**
+    *   **Streamlit:** Used as `st`, it's the primary framework for building the web application's user interface and handling the overall application flow.
+    *   **PDFMiner (specifically `pdfminer.pdfinterp`, `pdfminer.converter`, `pdfminer.layout`, `pdfminer.pdfpage`):** Explicitly mentioned and imported, this library is used for parsing PDF files and extracting text content.
+    *   **`zipfile` (Python Standard Library):** Used for creating ZIP archives, specifically to bundle multiple text files (one per page) for download.
+    *   **`io` (Python Standard Library):** Specifically `StringIO`, used for handling text data in memory as a file-like object, which is useful for `pdfminer` and later for creating downloadable content.
+    *   **`base64` (Python Standard Library):** Imported in `functions.py`, though not explicitly used in the provided `save_pages` function snippet, it indicates a potential intended use for encoding/decoding data.
+
+3.  **Other:**
+    *   **Markdown:** Used within `st.markdown` for formatting the text content displayed in the Streamlit application's UI.
 ## 📂 Project Structure
 
 ```bash
-.git\HEAD
-.git\config
-.git\description
-.git\hooks\applypatch-msg.sample
-.git\hooks\commit-msg.sample
-.git\hooks\fsmonitor-watchman.sample
-.git\hooks\post-update.sample
-.git\hooks\pre-applypatch.sample
-.git\hooks\pre-commit.sample
-.git\hooks\pre-merge-commit.sample
-.git\hooks\pre-push.sample
-.git\hooks\pre-rebase.sample
-.git\hooks\pre-receive.sample
-.git\hooks\prepare-commit-msg.sample
-.git\hooks\push-to-checkout.sample
-.git\hooks\sendemail-validate.sample
-.git\hooks\update.sample
-.git\index
-.git\info\exclude
-.git\logs\HEAD
-.git\logs\refs\heads\main
-.git\logs\refs\remotes\origin\HEAD
-.git\objects\pack\pack-f744ffa14e7e04ed9584ef75a064437a779c1c73.idx
-.git\objects\pack\pack-f744ffa14e7e04ed9584ef75a064437a779c1c73.pack
-.git\objects\pack\pack-f744ffa14e7e04ed9584ef75a064437a779c1c73.rev
-.git\packed-refs
-.git\refs\heads\main
-.git\refs\remotes\origin\HEAD
-.gitattributes
-.gitignore
-.streamlit\config.toml
-PEditor.py
-README.md
-app.py
-functions.py
-requirements.txt
+reposage_gqrarzp2/
+│   .gitattributes
+│   .gitignore
+│   app.py
+│   functions.py
+│   PEditor.py
+│   README.md
+│   requirements.txt
+│   ├── .git/
+│   │   config
+│   │   description
+│   │   HEAD
+│   │   index
+│   │   packed-refs
+│   │   ├── hooks/
+│   │   │   applypatch-msg.sample
+│   │   │   commit-msg.sample
+│   │   │   fsmonitor-watchman.sample
+│   │   │   post-update.sample
+│   │   │   pre-applypatch.sample
+│   │   │   pre-commit.sample
+│   │   │   pre-merge-commit.sample
+│   │   │   pre-push.sample
+│   │   │   pre-rebase.sample
+│   │   │   pre-receive.sample
+│   │   │   prepare-commit-msg.sample
+│   │   │   push-to-checkout.sample
+│   │   │   sendemail-validate.sample
+│   │   │   update.sample
+│   │   ├── info/
+│   │   │   exclude
+│   │   ├── logs/
+│   │   │   HEAD
+│   │   │   ├── refs/
+│   │   │   │   ├── heads/
+│   │   │   │   │   main
+│   │   │   │   ├── remotes/
+│   │   │   │   │   ├── origin/
+│   │   │   │   │   │   HEAD
+│   │   ├── objects/
+│   │   │   ├── info/
+│   │   │   ├── pack/
+│   │   │   │   pack-c6bf5b0cf09fff42a666906fc5da214f5e8f4ba1.idx
+│   │   │   │   pack-c6bf5b0cf09fff42a666906fc5da214f5e8f4ba1.pack
+│   │   │   │   pack-c6bf5b0cf09fff42a666906fc5da214f5e8f4ba1.rev
+│   │   ├── refs/
+│   │   │   ├── heads/
+│   │   │   │   main
+│   │   │   ├── remotes/
+│   │   │   │   ├── origin/
+│   │   │   │   │   HEAD
+│   │   │   ├── tags/
+│   ├── .streamlit/
+│   │   config.toml
 ```
 
 ## 🤝 Contribution
